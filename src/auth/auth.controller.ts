@@ -1,18 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, LoginDto, RegisterUserDto, UpdateAuthDto } from './dto';
-import { LoginResponse } from './interfaces/login-response';
+import { CreateUserDto, LoginDto, RegisterUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginResponse } from './interfaces/login-response';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.authService.create(createUserDto);
-  }
 
   @Post('/login')
   login(@Body() loginDto: LoginDto) {
@@ -24,7 +19,11 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
-  @UseGuards(AuthGuard)
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.authService.create(createUserDto);
+  }
+
   @Get()
   findAll(@Request() req: Request) {
     return this.authService.findAll();
